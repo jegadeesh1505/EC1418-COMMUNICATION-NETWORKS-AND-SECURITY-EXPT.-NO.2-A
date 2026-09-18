@@ -21,8 +21,97 @@ To implement an error control mechanism within the Sliding Window protocol and a
 12.	Compare the results obtained for 0%, 10%, 20%, 30%, and 40% packet-loss conditions.
  
 # C++ PROGRAM
-
+```c++
+#include <iostream> 
+#include <iomanip> 
+#include <cstdlib> 
+using namespace std; 
+ 
+void slidingWindow(int totalPackets, int windowSize, int lossPercent) 
+{ 
+    int base = 0; 
+    int transmissions = 0; 
+    int retransmissions = 0; 
+    int time = 0; 
+ 
+    while (base < totalPackets) 
+    { 
+        int windowEnd = base + windowSize; 
+ 
+        if (windowEnd > totalPackets) 
+            windowEnd = totalPackets; 
+ 
+        bool error = false; 
+ 
+        // Transmit packets in the current window 
+        for (int i = base; i < windowEnd; i++) 
+        { 
+            transmissions++; 
+ 
+            // Simulate packet loss 
+            if ((rand() % 100) < lossPercent) 
+            { 
+                error = true; 
+                retransmissions++; 
+                break; 
+            } 
+        } 
+ 
+        // Slide the window if no packet is lost 
+        if (!error) 
+            base = windowEnd; 
+ 
+        time++; 
+    } 
+ 
+    double reliability = 100.0; 
+    double throughput = (double)totalPackets / time; 
+    double efficiency = 
+        ((double)totalPackets / transmissions) * 100; 
+ 
+    cout << setw(8) << lossPercent 
+         << setw(15) << transmissions 
+         << setw(18) << retransmissions 
+         << setw(15) << fixed << setprecision(2) 
+         << reliability 
+         << setw(15) << throughput 
+         << setw(15) << efficiency 
+         << endl; 
+} 
+ 
+int main() 
+{ 
+    srand(10); 
+ 
+    int totalPackets = 100; 
+    int windowSize = 5; 
+ 
+    cout << "SLIDING WINDOW PROTOCOL - GO-BACK-N" << endl; 
+    cout << "-----------------------------------------------" << endl; 
+    cout << "Total Packets : " << totalPackets << endl; 
+    cout << "Window Size   : " << windowSize << endl; 
+    cout << "-----------------------------------------------" << endl; 
+ 
+    cout << setw(8) << "Loss%" 
+         << setw(15) << "Transmissions" 
+         << setw(18) << "Retransmissions" 
+         << setw(15) << "Reliability" 
+         << setw(15) << "Throughput" 
+         << setw(15) << "Efficiency" 
+         << endl; 
+ 
+    // Simulate different network conditions 
+    slidingWindow(totalPackets, windowSize, 0); 
+    slidingWindow(totalPackets, windowSize, 10); 
+    slidingWindow(totalPackets, windowSize, 20); 
+    slidingWindow(totalPackets, windowSize, 30); 
+    slidingWindow(totalPackets, windowSize, 40); 
+ 
+    return 0; 
+} 
+```
 # OUTPUT
+<img width="798" height="240" alt="Screenshot 2026-09-17 120121" src="https://github.com/user-attachments/assets/4cadcdc2-aafa-477b-a351-031521532ff3" />
 
  
 # RESULT
